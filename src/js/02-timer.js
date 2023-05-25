@@ -88,6 +88,8 @@ class CountDownTimer {
 
 
 startBtn.addEventListener("click", () => {
+  const selectedDate = selectedDates[0];
+  // const currentDate = new Date();
   const timer = new CountDownTimer({
         selector: ".timer",
         targetDate: selectedDate,
