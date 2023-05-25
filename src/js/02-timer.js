@@ -22,19 +22,11 @@ const options = {
     const selectedDate = selectedDates[0];
     const currentDate = new Date();
     if (selectedDate < currentDate) {
-      startBtn.disabled = true; 
-      
+      startBtn.disabled = true;       
       window.alert("Please choose a date in the future");
     } else {
-      startBtn.disabled = false;
-      
-      const timer = new CountDownTimer({
-        selector: ".timer",
-        targetDate: selectedDate,
-      });
-      timer.updateMarkup();
-    }
-    console.log(selectedDate);
+      startBtn.disabled = false;      
+    }  
   },
 };
 
@@ -44,7 +36,8 @@ const pickrTime = flatpickr(dateInput, options);
 
 
 class CountDownTimer {
-  constructor({selector, targetDate}) {
+  constructor({ selector, targetDate }) {
+    this.intervalId = null
     this.targetDate = targetDate,
     this.daysSpan = document.querySelector(`${selector} [data-days]`)
     this.hoursSpan = document.querySelector(`${selector} [data-hours]`)
@@ -54,10 +47,11 @@ class CountDownTimer {
   }
   
   updateMarkup() {
-    setInterval(() => {
+    this.intervalId = setInterval(() => {
         
         const currentTime = Date.now();
         const delta = this.targetDate - currentTime
+        console.log(delta)
         const { days, hours, minutes, seconds } = this.convertMs(delta)
       
         this.daysSpan.textContent = addLeadingZero(days)
@@ -65,6 +59,8 @@ class CountDownTimer {
         this.minutesSpan.textContent = addLeadingZero(minutes)
         this.secondsSpan.textContent = addLeadingZero(seconds)
         console.log("new interval")
+        console.log(delta)
+        if (delta < 1000) {clearInterval(intervalId)}
       }, 1000)
     
 
@@ -92,19 +88,12 @@ class CountDownTimer {
 
 
 startBtn.addEventListener("click", () => {
-  const selectedDate = pickrTime.selectedDates[0];
-  const currentDate = new Date();
-  if (selectedDate < currentDate) {
-    return; 
-  }
-
+  const timer = new CountDownTimer({
+        selector: ".timer",
+        targetDate: selectedDate,
+      });
+  timer.updateMarkup();
   dateInput.disabled = true;
 
-  const timer = new CountDownTimer({
-    selector: ".timer",
-    targetDate: pickrTime.selectedDates[0],
-  })
-  startBtn.disabled = true;
-  timer.updateMarkup();
-  
+ 
 })
