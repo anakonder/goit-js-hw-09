@@ -8,7 +8,10 @@ const body = document.body
 let currentColor;
 let timerId = null;
 
+stopBtn.disabled = true;
+
 startBtn.addEventListener("click", () => {
+    stopBtn.disabled = false;
     startBtn.disabled = true;
     timerId = setInterval(() => {
         currentColor = getRandomHexColor(); +
@@ -20,5 +23,6 @@ startBtn.addEventListener("click", () => {
 stopBtn.addEventListener("click", () => {
     clearInterval(timerId)
     startBtn.disabled = false;
+    stopBtn.disabled = true;
 })
 

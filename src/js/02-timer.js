@@ -1,7 +1,18 @@
 import flatpickr from "flatpickr";
 import "flatpickr/dist/flatpickr.min.css";
 
-const dateInput = document.querySelector("#datetime-picker")
+function addLeadingZero(value) {
+          return String(value).padStart(2, '0');
+        }
+        
+        
+        
+const dateInput = document.querySelector("#datetime-picker")        
+const startBtn = document.querySelector("[data-start]");  
+     
+
+startBtn.disabled = true;
+
 const options = {
   enableTime: true,
   time_24hr: true,
@@ -12,38 +23,47 @@ const options = {
     const currentDate = new Date();
     if (selectedDate < currentDate) {
       startBtn.disabled = true; 
+      
       window.alert("Please choose a date in the future");
     } else {
       startBtn.disabled = false;
+      
+      const timer = new CountDownTimer({
+        selector: ".timer",
+        targetDate: selectedDate,
+      });
+      timer.updateMarkup();
     }
     console.log(selectedDate);
   },
 };
 
 const pickrTime = flatpickr(dateInput, options);
-const startBtn = document.querySelector("[data-start]");
+
 
 
 
 class CountDownTimer {
-constructor({selector, targetDate}) {
-  this.targetDate = targetDate,
-  this.daysSpan = document.querySelector(`${selector} [data-days]`)
-  this.hoursSpan = document.querySelector(`${selector} [data-hours]`)
-  this.minutesSpan = document.querySelector(`${selector} [data-minutes]`)
-  this.secondsSpan = document.querySelector(`${selector} [data-seconds]`)
-  
+  constructor({selector, targetDate}) {
+    this.targetDate = targetDate,
+    this.daysSpan = document.querySelector(`${selector} [data-days]`)
+    this.hoursSpan = document.querySelector(`${selector} [data-hours]`)
+    this.minutesSpan = document.querySelector(`${selector} [data-minutes]`)
+    this.secondsSpan = document.querySelector(`${selector} [data-seconds]`)
+    
   }
   
   updateMarkup() {
     setInterval(() => {
+        
         const currentTime = Date.now();
         const delta = this.targetDate - currentTime
         const { days, hours, minutes, seconds } = this.convertMs(delta)
-        this.daysSpan.textContent = days
-        this.hoursSpan.textContent = hours
-        this.minutesSpan.textContent = minutes
-        this.secondsSpan.textContent = seconds
+      
+        this.daysSpan.textContent = addLeadingZero(days)
+        this.hoursSpan.textContent = addLeadingZero(hours)
+        this.minutesSpan.textContent = addLeadingZero(minutes)
+        this.secondsSpan.textContent = addLeadingZero(seconds)
         console.log("new interval")
       }, 1000)
     
@@ -65,11 +85,21 @@ constructor({selector, targetDate}) {
   }
 }
 
+   
+  
+
 
 
 
 startBtn.addEventListener("click", () => {
-  
+  const selectedDate = pickrTime.selectedDates[0];
+  const currentDate = new Date();
+  if (selectedDate < currentDate) {
+    return; 
+  }
+
+  dateInput.disabled = true;
+
   const timer = new CountDownTimer({
     selector: ".timer",
     targetDate: pickrTime.selectedDates[0],
