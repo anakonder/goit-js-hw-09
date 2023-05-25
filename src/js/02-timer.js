@@ -51,7 +51,10 @@ class CountDownTimer {
         
         const currentTime = Date.now();
         const delta = this.targetDate - currentTime
-        console.log(delta)
+      if (delta < 999) {
+        clearInterval(this.intervalId)
+        }
+        // console.log(delta)
         const { days, hours, minutes, seconds } = this.convertMs(delta)
       
         this.daysSpan.textContent = addLeadingZero(days)
@@ -60,7 +63,6 @@ class CountDownTimer {
         this.secondsSpan.textContent = addLeadingZero(seconds)
         console.log("new interval")
         console.log(delta)
-        if (delta < 1000) {clearInterval(intervalId)}
       }, 1000)
     
 
@@ -86,16 +88,15 @@ class CountDownTimer {
 
 
 
-
 startBtn.addEventListener("click", () => {
-  const selectedDate = selectedDates[0];
-  // const currentDate = new Date();
+  
+  const selectedDate = pickrTime.selectedDates[0];
   const timer = new CountDownTimer({
         selector: ".timer",
         targetDate: selectedDate,
       });
   timer.updateMarkup();
   dateInput.disabled = true;
-
- 
+  dateInput.disabled = true;
 })
+
