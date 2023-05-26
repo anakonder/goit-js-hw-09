@@ -97,6 +97,6 @@ startBtn.addEventListener("click", () => {
       });
   timer.updateMarkup();
   dateInput.disabled = true;
-  dateInput.disabled = true;
+  startBtn.disabled = true;
 })
 
